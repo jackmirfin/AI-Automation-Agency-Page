@@ -56,7 +56,7 @@ export default function IntegrationMarquee() {
       </div>
 
       {/* Grid (mobile) */}
-      <div className="mt-6 grid grid-cols-3 gap-2 px-4 sm:hidden">
+      <div className="mt-6 grid grid-cols-3 gap-2 px-6 sm:hidden">
         {integrations.map((item) => {
           const Icon = item.icon;
           return (

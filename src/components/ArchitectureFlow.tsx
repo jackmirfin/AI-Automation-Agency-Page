@@ -42,7 +42,7 @@ export default function ArchitectureFlow() {
   return (
     <section id="architecture" className="relative py-24">
       <div className="absolute inset-0 grid-pattern opacity-10" />
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-6 sm:px-10 lg:px-16">
         <SectionLabel>Architecture</SectionLabel>
         <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
           From 3.5 hours to 12 seconds

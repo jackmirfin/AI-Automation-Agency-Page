@@ -1,16 +1,28 @@
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import AuditButton from './AuditButton';
-import { useTypewriter } from '../hooks/useTypewriter';
+import { useRotatingTypewriter } from '../hooks/useTypewriter';
 
 interface HeroProps {
   onOpenAudit: () => void;
 }
 
-const HEADLINE_LINE_2 = 'Replaced by autonomous AI pipelines that run in 12 seconds.';
+const ROTATING_PHRASES = [
+  '12 seconds.',
+  '60% less overhead.',
+  'zero human touchpoints.',
+  '24/7 autonomous agents.',
+];
 
 export default function Hero({ onOpenAudit }: HeroProps) {
-  const { displayed, done } = useTypewriter(HEADLINE_LINE_2, 35, 600);
+  const { displayed, done } = useRotatingTypewriter({
+    phrases: ROTATING_PHRASES,
+    typeSpeed: 45,
+    deleteSpeed: 30,
+    pauseAfterType: 2200,
+    pauseAfterDelete: 400,
+    startDelay: 500,
+  });
 
   return (
     <section id="top" className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
@@ -19,7 +31,7 @@ export default function Hero({ onOpenAudit }: HeroProps) {
       <div className="absolute inset-0 radial-glow" />
       <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950 to-transparent" />
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-6 sm:px-10 lg:px-16">
         <div className="mx-auto max-w-3xl text-center">
           {/* Badge */}
           <motion.div
@@ -41,13 +53,11 @@ export default function Hero({ onOpenAudit }: HeroProps) {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="block"
             >
-              Manual operations are costing you 3.5 hours per lead.
+              Manual operations, automated in
             </motion.span>
-            <span className="block text-indigo-400 mt-1">
+            <span className="block text-indigo-400 mt-1 h-[1.2em]">
               {displayed}
-              {!done && (
-                <span className="inline-block w-[3px] h-[0.8em] bg-indigo-400 ml-1 align-middle animate-pulse" />
-              )}
+              <span className="inline-block w-[3px] h-[0.8em] bg-indigo-400 ml-1 align-middle animate-pulse" />
             </span>
           </h1>
 
@@ -61,7 +71,7 @@ export default function Hero({ onOpenAudit }: HeroProps) {
             We replace manual workflows with custom AI agents that cut operational overhead by 60%.
           </motion.p>
 
-          {/* CTA Group — gated behind typewriter completion */}
+          {/* CTA Group — gated behind first phrase completion */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={done ? { opacity: 1, y: 0 } : {}}

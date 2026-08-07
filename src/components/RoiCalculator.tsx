@@ -41,7 +41,7 @@ export default function RoiCalculator({ onOpenAudit }: RoiCalculatorProps) {
 
   return (
     <section id="calculator" className="relative py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-16">
         <SectionLabel>ROI Calculator</SectionLabel>
         <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
           Estimate your savings in real time

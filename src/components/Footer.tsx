@@ -16,7 +16,7 @@ export default function Footer({ onOpenAudit }: FooterProps) {
   return (
     <footer className="relative border-t border-slate-800 bg-slate-950">
       {/* Final CTA */}
-      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-6 py-20 sm:px-10 lg:px-16">
         <div className="relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/40 p-8 text-center sm:p-12">
           <div className="absolute inset-0 radial-glow opacity-50" />
           <div className="relative">
@@ -38,7 +38,7 @@ export default function Footer({ onOpenAudit }: FooterProps) {
 
       {/* Footer bottom */}
       <div className="border-t border-slate-800/50">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-4 py-8 sm:flex-row sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 py-8 sm:flex-row sm:px-10 lg:px-16">
           {/* Brand */}
           <div className="flex items-center gap-2.5">
             <div className="flex h-7 w-7 items-center justify-center rounded-lg border border-slate-700 bg-slate-900">
@@ -72,7 +72,7 @@ export default function Footer({ onOpenAudit }: FooterProps) {
         </div>
 
         <div className="border-t border-slate-800/50">
-          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 sm:flex-row sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-5 sm:flex-row sm:px-10 lg:px-16">
             <p className="font-mono text-xs text-slate-600">
               © {new Date().getFullYear()} AAA. All systems maintained under active SLA.
             </p>

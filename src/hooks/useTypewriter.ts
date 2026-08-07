@@ -1,40 +1,87 @@
 import { useState, useEffect, useRef } from 'react';
 
-export function useTypewriter(text: string, speed = 35, startDelay = 400) {
+interface RotatingTypewriterOptions {
+  phrases: string[];
+  typeSpeed?: number;
+  deleteSpeed?: number;
+  pauseAfterType?: number;
+  pauseAfterDelete?: number;
+  startDelay?: number;
+}
+
+export function useRotatingTypewriter({
+  phrases,
+  typeSpeed = 35,
+  deleteSpeed = 25,
+  pauseAfterType = 2000,
+  pauseAfterDelete = 300,
+  startDelay = 500,
+}: RotatingTypewriterOptions) {
   const [displayed, setDisplayed] = useState('');
   const [done, setDone] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduced) {
-      setDisplayed(text);
+      setDisplayed(phrases[0]);
       setDone(true);
       return;
     }
 
-    setDisplayed('');
     setDone(false);
+    let cancelled = false;
+    const clearTimers = () => {
+      timersRef.current.forEach(clearTimeout);
+      timersRef.current = [];
+    };
+    const schedule = (fn: () => void, ms: number) => {
+      if (cancelled) return;
+      const t = setTimeout(fn, ms);
+      timersRef.current.push(t);
+    };
 
-    let i = 0;
-    const startTimer = setTimeout(() => {
-      const tick = () => {
-        if (i < text.length) {
-          setDisplayed(text.slice(0, i + 1));
-          i++;
-          timerRef.current = setTimeout(tick, speed);
+    let phraseIdx = 0;
+    let charIdx = 0;
+    let mode: 'typing' | 'pausing' | 'deleting' = 'typing';
+
+    const tick = () => {
+      if (cancelled) return;
+      const phrase = phrases[phraseIdx];
+
+      if (mode === 'typing') {
+        charIdx++;
+        setDisplayed(phrase.slice(0, charIdx));
+        if (charIdx >= phrase.length) {
+          mode = 'pausing';
+          if (phraseIdx === 0) setDone(true);
+          schedule(tick, pauseAfterType);
         } else {
-          setDone(true);
+          schedule(tick, typeSpeed);
         }
-      };
-      tick();
-    }, startDelay);
+      } else if (mode === 'pausing') {
+        mode = 'deleting';
+        schedule(tick, pauseAfterDelete);
+      } else if (mode === 'deleting') {
+        charIdx--;
+        setDisplayed(phrase.slice(0, charIdx));
+        if (charIdx <= 0) {
+          phraseIdx = (phraseIdx + 1) % phrases.length;
+          mode = 'typing';
+          schedule(tick, typeSpeed);
+        } else {
+          schedule(tick, deleteSpeed);
+        }
+      }
+    };
+
+    schedule(tick, startDelay);
 
     return () => {
-      clearTimeout(startTimer);
-      if (timerRef.current) clearTimeout(timerRef.current);
+      cancelled = true;
+      clearTimers();
     };
-  }, [text, speed, startDelay]);
+  }, [phrases, typeSpeed, deleteSpeed, pauseAfterType, pauseAfterDelete, startDelay]);
 
   return { displayed, done };
 }
