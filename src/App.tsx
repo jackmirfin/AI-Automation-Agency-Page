@@ -8,6 +8,8 @@ import RoiCalculator from './components/RoiCalculator';
 import Process from './components/Process';
 import Footer from './components/Footer';
 import AuditModal from './components/AuditModal';
+import ScrollProgress from './components/ScrollProgress';
+import StickyCTA from './components/StickyCTA';
 
 function App() {
   const [auditOpen, setAuditOpen] = useState(false);
@@ -15,6 +17,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200">
+      <ScrollProgress />
       <Header onOpenAudit={openAudit} />
       <main>
         <Hero onOpenAudit={openAudit} />
@@ -25,6 +28,7 @@ function App() {
         <Process />
       </main>
       <Footer onOpenAudit={openAudit} />
+      <StickyCTA onOpenAudit={openAudit} />
       <AuditModal open={auditOpen} onClose={() => setAuditOpen(false)} />
     </div>
   );

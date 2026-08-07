@@ -1,16 +1,15 @@
 import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Users, DollarSign, Clock, TrendingDown, Calendar, Wallet } from 'lucide-react';
+import { Users, DollarSign, Clock, Wallet } from 'lucide-react';
 import { SectionLabel } from './Services';
 import AuditButton from './AuditButton';
+import { useCountUp } from '../hooks/useCountUp';
 
 interface RoiCalculatorProps {
   onOpenAudit: () => void;
 }
 
-// Assumed: automation recovers 60% of manual task hours
 const RECOVERY_RATE = 0.6;
-// Assumed: implementation cost equivalent to 3 months of recovered labor
 const PAYBACK_MONTHS = 3;
 const WEEKS_PER_YEAR = 52;
 
@@ -23,15 +22,17 @@ export default function RoiCalculator({ onOpenAudit }: RoiCalculatorProps) {
     const totalManualHoursYear = teamSize * weeklyHours * WEEKS_PER_YEAR;
     const recoveredHours = Math.round(totalManualHoursYear * RECOVERY_RATE);
     const annualSavings = recoveredHours * hourlyCost;
-    const paybackPeriod = PAYBACK_MONTHS;
 
     return {
       recoveredHours,
       annualSavings,
-      paybackPeriod,
+      paybackPeriod: PAYBACK_MONTHS,
       weeklyLaborCost: teamSize * weeklyHours * hourlyCost,
     };
   }, [teamSize, hourlyCost, weeklyHours]);
+
+  const animatedSavings = useCountUp(results.annualSavings, 500);
+  const animatedHours = useCountUp(results.recoveredHours, 500);
 
   const fmtMoney = (n: number) =>
     n.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
@@ -43,11 +44,11 @@ export default function RoiCalculator({ onOpenAudit }: RoiCalculatorProps) {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionLabel>ROI Calculator</SectionLabel>
         <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-          Client-side capacity &amp; savings estimator
+          Estimate your savings in real time
         </h2>
         <p className="mt-4 max-w-2xl text-slate-400">
-          Adjust the parameters below to calculate projected operational savings in real time.
-          All computations run locally in your browser.
+          Adjust the parameters to see projected operational savings. All computations run
+          locally in your browser.
         </p>
 
         <div className="mt-12 grid gap-5 lg:grid-cols-5">
@@ -95,7 +96,6 @@ export default function RoiCalculator({ onOpenAudit }: RoiCalculatorProps) {
               display={`${weeklyHours} hrs/employee`}
             />
 
-            {/* Weekly cost summary */}
             <div className="mt-6 flex items-center justify-between rounded-xl border border-slate-800 bg-slate-800/30 px-4 py-3">
               <span className="text-xs text-slate-500">Current weekly manual labor cost</span>
               <span className="font-mono text-sm text-slate-300">
@@ -104,40 +104,60 @@ export default function RoiCalculator({ onOpenAudit }: RoiCalculatorProps) {
             </div>
           </div>
 
-          {/* Outputs */}
-          <div className="lg:col-span-2 flex flex-col gap-4">
-            <OutputCard
-              icon={TrendingDown}
-              label="Annual Hours Recovered"
-              value={fmtNum(results.recoveredHours)}
-              unit="hrs"
-              accent="emerald"
-              delay={0}
-            />
-            <OutputCard
-              icon={Wallet}
-              label="Estimated Annual Savings"
-              value={fmtMoney(results.annualSavings)}
-              unit="USD"
-              accent="indigo"
-              delay={0.1}
-            />
-            <OutputCard
-              icon={Calendar}
-              label="Projected Payback Period"
-              value={`${results.paybackPeriod}`}
-              unit="months"
-              accent="blue"
-              delay={0.2}
-            />
+          {/* Single Output Panel */}
+          <div className="lg:col-span-2 flex flex-col">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-1 flex-col rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/10 to-slate-900/40 p-6"
+            >
+              {/* Hero savings number */}
+              <div className="flex items-center gap-2">
+                <Wallet className="h-4 w-4 text-indigo-400" />
+                <span className="font-mono text-xs uppercase tracking-wider text-indigo-400">
+                  Estimated Annual Savings
+                </span>
+              </div>
+              <p className="mt-3 text-4xl font-semibold text-white sm:text-5xl">
+                {fmtMoney(animatedSavings)}
+              </p>
+              <p className="mt-1 font-mono text-xs text-slate-500">USD per year</p>
 
-            <AuditButton onOpen={onOpenAudit} icon className="mt-1 w-full py-3">
-              Lock In Your Audit Plan
-            </AuditButton>
+              {/* Secondary metrics */}
+              <div className="mt-6 space-y-3 border-t border-slate-800/50 pt-5">
+                <SecondaryMetric
+                  label="Annual hours recovered"
+                  value={`${fmtNum(animatedHours)} hrs`}
+                />
+                <SecondaryMetric
+                  label="Projected payback period"
+                  value={`${results.paybackPeriod} months`}
+                />
+                <SecondaryMetric
+                  label="Weekly labor cost recovered"
+                  value={fmtMoney(Math.round(results.weeklyLaborCost * RECOVERY_RATE))}
+                />
+              </div>
+
+              <AuditButton onOpen={onOpenAudit} icon className="mt-6 w-full py-3">
+                Request Your Roadmap
+              </AuditButton>
+            </motion.div>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function SecondaryMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="text-xs text-slate-500">{label}</span>
+      <span className="font-mono text-sm font-semibold text-slate-200">{value}</span>
+    </div>
   );
 }
 
@@ -194,44 +214,5 @@ function Slider({
         <span className="font-mono text-[10px] text-slate-600">{max} {unit}</span>
       </div>
     </div>
-  );
-}
-
-function OutputCard({
-  icon: Icon,
-  label,
-  value,
-  unit,
-  accent,
-  delay,
-}: {
-  icon: typeof Users;
-  label: string;
-  value: string;
-  unit: string;
-  accent: 'emerald' | 'indigo' | 'blue';
-  delay: number;
-}) {
-  const accents = {
-    emerald: 'border-emerald-500/20 bg-emerald-500/5 text-emerald-400',
-    indigo: 'border-indigo-500/20 bg-indigo-500/5 text-indigo-400',
-    blue: 'border-blue-500/20 bg-blue-500/5 text-blue-400',
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.3, delay }}
-      className={`rounded-2xl border p-5 ${accents[accent]}`}
-    >
-      <div className="mb-3 flex items-center gap-2">
-        <Icon className="h-4 w-4" />
-        <span className="font-mono text-xs uppercase tracking-wider opacity-80">{label}</span>
-      </div>
-      <p className="text-3xl font-semibold text-white">{value}</p>
-      <p className="mt-1 font-mono text-xs text-slate-500">{unit}</p>
-    </motion.div>
   );
 }

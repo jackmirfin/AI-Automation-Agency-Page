@@ -1,12 +1,17 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import AuditButton from './AuditButton';
+import { useTypewriter } from '../hooks/useTypewriter';
 
 interface HeroProps {
   onOpenAudit: () => void;
 }
 
+const HEADLINE_LINE_2 = 'Replaced by autonomous AI pipelines that run in 12 seconds.';
+
 export default function Hero({ onOpenAudit }: HeroProps) {
+  const { displayed, done } = useTypewriter(HEADLINE_LINE_2, 35, 600);
+
   return (
     <section id="top" className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
       {/* Background */}
@@ -29,15 +34,22 @@ export default function Hero({ onOpenAudit }: HeroProps) {
           </motion.div>
 
           {/* Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="mt-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl"
-          >
-            Eliminate operational bottlenecks with{' '}
-            <span className="text-indigo-400">custom AI workflows</span> and autonomous agents.
-          </motion.h1>
+          <h1 className="mt-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <motion.span
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="block"
+            >
+              Manual operations are costing you 3.5 hours per lead.
+            </motion.span>
+            <span className="block text-indigo-400 mt-1">
+              {displayed}
+              {!done && (
+                <span className="inline-block w-[3px] h-[0.8em] bg-indigo-400 ml-1 align-middle animate-pulse" />
+              )}
+            </span>
+          </h1>
 
           {/* Subheadline */}
           <motion.p
@@ -46,19 +58,18 @@ export default function Hero({ onOpenAudit }: HeroProps) {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-400"
           >
-            We design, deploy, and maintain custom automation systems that reduce manual labor
-            overhead by 40–70% for growth-stage service enterprises.
+            We replace manual workflows with custom AI agents that cut operational overhead by 60%.
           </motion.p>
 
-          {/* CTA Group */}
+          {/* CTA Group — gated behind typewriter completion */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            animate={done ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
             className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row"
           >
             <AuditButton onOpen={onOpenAudit} className="px-6 py-3 text-base" icon>
-              Schedule an Automation Audit
+              Request Your Roadmap
             </AuditButton>
             <a
               href="#architecture"
@@ -69,16 +80,18 @@ export default function Hero({ onOpenAudit }: HeroProps) {
             </a>
           </motion.div>
 
-          {/* Stats strip */}
+          {/* Value prop strip */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-16 grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-slate-800 bg-slate-800"
+            initial={{ opacity: 0 }}
+            animate={done ? { opacity: 1 } : {}}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mt-8 flex items-center justify-center gap-3 sm:gap-6"
           >
-            <StatCell value="40–70%" label="Manual overhead reduction" />
-            <StatCell value="< 12s" label="Automated pipeline execution" />
-            <StatCell value="24/7" label="Autonomous agent uptime" />
+            <ValueProp text="No-code required" />
+            <Divider />
+            <ValueProp text="Deployed in 4 weeks" />
+            <Divider />
+            <ValueProp text="SLA-backed uptime" />
           </motion.div>
         </div>
       </div>
@@ -86,11 +99,12 @@ export default function Hero({ onOpenAudit }: HeroProps) {
   );
 }
 
-function StatCell({ value, label }: { value: string; label: string }) {
+function ValueProp({ text }: { text: string }) {
   return (
-    <div className="bg-slate-950/60 px-4 py-6 text-center">
-      <p className="font-mono text-2xl font-semibold text-white sm:text-3xl">{value}</p>
-      <p className="mt-1 text-xs text-slate-500 sm:text-sm">{label}</p>
-    </div>
+    <span className="font-mono text-xs text-slate-500">{text}</span>
   );
+}
+
+function Divider() {
+  return <span className="text-slate-700">/</span>;
 }

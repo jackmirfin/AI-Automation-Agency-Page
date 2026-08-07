@@ -38,7 +38,6 @@ export default function ArchitectureFlow() {
 
   const nodes = mode === 'manual' ? manualNodes : automatedNodes;
   const totalTime = mode === 'manual' ? '3.5 Hours' : '< 12 Seconds';
-  const totalSeconds = mode === 'manual' ? 12600 : 11.9;
 
   return (
     <section id="architecture" className="relative py-24">
@@ -46,17 +45,17 @@ export default function ArchitectureFlow() {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionLabel>Architecture</SectionLabel>
         <h2 className="mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-          Before vs. After: Pipeline comparison
+          From 3.5 hours to 12 seconds
         </h2>
         <p className="mt-4 max-w-2xl text-slate-400">
-          Toggle between a legacy manual process and an automated AI pipeline to see the
-          operational difference at each stage.
+          Toggle to compare a legacy manual process against the automated AI pipeline.
+          The automated view shows the system your deployment ships with.
         </p>
 
         {/* Toggle */}
         <div className="mt-8 inline-flex items-center rounded-xl border border-slate-800 bg-slate-900/60 p-1">
           <ToggleBtn active={mode === 'manual'} onClick={() => setMode('manual')}>
-            Manual Process (Legacy)
+            Manual Process
           </ToggleBtn>
           <ToggleBtn active={mode === 'automated'} onClick={() => setMode('automated')}>
             Automated AI Pipeline
@@ -118,21 +117,31 @@ export default function ArchitectureFlow() {
                         </div>
                       </motion.div>
 
-                      {/* Connector */}
+                      {/* Connector with animated data pulse */}
                       {!isLast && (
-                        <div className="flex items-center justify-center lg:py-2">
-                          {mode === 'automated' ? (
-                            <motion.div
-                              animate={{ x: [0, 4, 0] }}
-                              transition={{ repeat: Infinity, duration: 1.5, delay: i * 0.2 }}
-                              className="hidden lg:block"
-                            >
-                              <ArrowRight className="h-4 w-4 text-indigo-500/60" />
-                            </motion.div>
-                          ) : (
-                            <Repeat className="hidden h-4 w-4 text-slate-700 lg:block" />
-                          )}
+                        <div className="relative flex items-center justify-center lg:py-2">
+                          {/* Static arrow (mobile + manual) */}
                           <ArrowRight className="h-4 w-4 text-slate-700 lg:hidden" />
+                          {mode === 'manual' ? (
+                            <Repeat className="hidden h-4 w-4 text-slate-700 lg:block" />
+                          ) : (
+                            <div className="relative hidden lg:block">
+                              {/* Track line */}
+                              <div className="h-px w-8 bg-slate-800" />
+                              {/* Animated pulse dot */}
+                              <motion.div
+                                className="absolute top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.8)]"
+                                animate={{ left: ['0%', '100%'] }}
+                                transition={{
+                                  repeat: Infinity,
+                                  duration: 1.8,
+                                  delay: i * 0.3,
+                                  ease: 'easeInOut',
+                                }}
+                              />
+                              <ArrowRight className="absolute -right-1 top-1/2 -translate-y-1/2 h-3 w-3 text-indigo-500/60" />
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>

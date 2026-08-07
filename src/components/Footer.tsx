@@ -1,4 +1,4 @@
-import { Zap, ArrowRight } from 'lucide-react';
+import { Zap } from 'lucide-react';
 import AuditButton from './AuditButton';
 
 interface FooterProps {
@@ -21,15 +21,15 @@ export default function Footer({ onOpenAudit }: FooterProps) {
           <div className="absolute inset-0 radial-glow opacity-50" />
           <div className="relative">
             <h2 className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-              Ready to map your automation pipeline?
+              Get your automation roadmap in 48 hours.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-slate-400">
-              Schedule an automation audit to receive a full operational blueprint, ROI matrix,
-              and integration roadmap for your infrastructure.
+              Receive a full operational blueprint, ROI matrix, and integration roadmap —
+              no meeting required.
             </p>
             <div className="mt-8 flex justify-center">
               <AuditButton onOpen={onOpenAudit} icon className="px-6 py-3 text-base">
-                Schedule Audit
+                Request Roadmap
               </AuditButton>
             </div>
           </div>
@@ -63,10 +63,11 @@ export default function Footer({ onOpenAudit }: FooterProps) {
             ))}
           </nav>
 
-          {/* Status */}
-          <div className="flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1">
-            <span className="animate-pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
-            <span className="font-mono text-[10px] text-emerald-400">Systems Operational</span>
+          {/* Uptime metric */}
+          <div className="flex items-center gap-1.5 rounded-full border border-slate-800 bg-slate-800/30 px-3 py-1">
+            <span className="font-mono text-[10px] text-slate-400">99.98% uptime</span>
+            <span className="text-slate-600">·</span>
+            <span className="font-mono text-[10px] text-slate-500">last 90 days</span>
           </div>
         </div>
 

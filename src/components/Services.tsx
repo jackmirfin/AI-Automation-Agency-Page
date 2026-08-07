@@ -1,27 +1,28 @@
 import { motion } from 'framer-motion';
-import { Workflow, Bot, Layers, ArrowRight } from 'lucide-react';
+import { Workflow, Bot, Layers, ArrowRight, Zap } from 'lucide-react';
 
 const services = [
   {
     icon: Workflow,
     title: 'Workflow Engineering',
-    description:
-      'End-to-end automation of document extraction, multi-system data synchronization, and automated ticket routing.',
+    description: 'Automate document extraction, data sync, and ticket routing end-to-end.',
     tags: ['Document Extraction', 'Data Sync', 'Ticket Routing'],
+    featured: true,
+    stat: { value: '< 12s', label: 'Pipeline execution' },
   },
   {
     icon: Bot,
     title: 'Autonomous Agents',
-    description:
-      'Custom RAG-based AI agents trained on proprietary company knowledge bases for 24/7 Tier-1 customer support and lead qualification.',
+    description: 'RAG-based AI agents for 24/7 support and lead qualification.',
     tags: ['RAG Pipelines', 'Knowledge Base', 'Lead Qualification'],
+    featured: false,
   },
   {
     icon: Layers,
     title: 'Custom AI Middleware',
-    description:
-      'Private vector database architecture, custom LLM routing, fine-tuned models, and robust API adapters built to custom business rules.',
+    description: 'Vector databases, LLM routing, and API adapters built to your rules.',
     tags: ['Vector Databases', 'LLM Routing', 'API Adapters'],
+    featured: false,
   },
 ];
 
@@ -44,15 +45,30 @@ export default function Services() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-80px' }}
                 transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="card-glow group flex flex-col rounded-2xl border border-slate-800 bg-slate-900/40 p-6 transition-colors hover:border-slate-700"
+                className={`card-glow group flex flex-col rounded-2xl border border-slate-800 bg-slate-900/40 p-6 transition-colors hover:border-slate-700 ${
+                  service.featured ? 'md:col-span-1 md:row-span-1' : ''
+                }`}
               >
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-700 bg-slate-800/50 text-indigo-400 transition-colors group-hover:border-indigo-500/50 group-hover:bg-indigo-500/10">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-700 bg-slate-800/50 text-indigo-400 transition-all duration-300 group-hover:border-indigo-500/50 group-hover:bg-indigo-500/10 group-hover:scale-110">
                   <Icon className="h-5 w-5" />
                 </div>
                 <h3 className="mt-5 text-lg font-semibold text-white">{service.title}</h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-400">
                   {service.description}
                 </p>
+
+                {service.stat && (
+                  <div className="mt-4 flex items-center gap-3 rounded-xl border border-indigo-500/20 bg-indigo-500/5 px-4 py-3">
+                    <Zap className="h-4 w-4 text-indigo-400" />
+                    <div>
+                      <p className="font-mono text-xl font-semibold text-white">
+                        {service.stat.value}
+                      </p>
+                      <p className="text-xs text-slate-500">{service.stat.label}</p>
+                    </div>
+                  </div>
+                )}
+
                 <div className="mt-5 flex flex-wrap gap-2">
                   {service.tags.map((tag) => (
                     <span

@@ -65,7 +65,7 @@ export default function Header({ onOpenAudit }: HeaderProps) {
 
         <div className="flex items-center gap-3">
           <AuditButton onOpen={onOpenAudit} className="hidden sm:inline-flex">
-            Schedule Audit
+            Request Roadmap
           </AuditButton>
           <button
             onClick={() => setMobileOpen((v) => !v)}
@@ -103,7 +103,7 @@ export default function Header({ onOpenAudit }: HeaderProps) {
               }}
               className="mt-2"
             >
-              Schedule Audit
+              Request Roadmap
             </AuditButton>
           </nav>
         </motion.div>
